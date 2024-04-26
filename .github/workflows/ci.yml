@@ -20,6 +20,8 @@ jobs:
         # if: startsWith(github.ref, 'refs/tags/') == false
         # env:
         #   GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        env:
+            GH_TOKEN: ${{ github.token }}
         run: |
             current_version=$(gh api repos/:owner/:repo/tags | jq -r '.[0].name')
 
