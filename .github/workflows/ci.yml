@@ -20,7 +20,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-            current_version=$(gh api repos/:owner/:repo/tags | jq -r '.[].name')
+            current_version=$(gh api repos/:owner/:repo/tags | jq -r '.[0].name')
 
             # Parse the version components
             major=$(echo "$current_version" | cut -d. -f1)
