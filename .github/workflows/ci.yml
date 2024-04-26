@@ -16,3 +16,26 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: tag a new version
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+            current_version=$(git describe --abbrev=0 --tags)
+            # Parse the version components
+            major=$(echo "$current_version" | cut -d. -f1)
+            minor=$(echo "$current_version" | cut -d. -f2)
+            patch=$(echo "$current_version" | cut -d. -f3)
+            
+            # Increment the patch version
+            patch=$((patch + 1))
+            
+            # Create the new tag
+            new_tag="$major.$minor.$patch"
+            # Create a tag with GitHub CLI
+            gh api repos/:owner/:repo/git/refs -f ref="refs/tags/$new_tag" -f sha=$(git rev-parse HEAD)
+            # create a release
+            # Create a release on GitHub
+            # Create a release on GitHub and publish it
+            gh release create "$new_tag" --title "Release $new_tag" --notes "Release notes here" --draft=false
+
+
